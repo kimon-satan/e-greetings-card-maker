@@ -6,7 +6,16 @@ const port = 3000;
 
 const cardTypes = ["birthday", "leaving"];
 
+////////////////////////////////////// HELPER FUNCTIONS //////////////////////////////////////
+
+const capitalize = s=>s.charAt(0).toUpperCase() + s.slice(1);
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+app.set('view engine', 'ejs');
+
 app.use(express.static('public'));
+
 
 app.get('/', (req,res)=>{
     res.sendFile(path.join(__dirname, 'public/index.html'));
@@ -20,10 +29,13 @@ app.get('/greetings-card', (req,res)=>{
     assert(req.query.recipient,"you need to provide a recipient");
 
     if(req.query.cardtype === "birthday"){
-        res.send(`Happy Birthday ${req.query.recipient}!`);
+        //res.send(`Happy Birthday ${req.query.recipient}!`);
+        res.render('birthday-card',{recipient: capitalize(req.query.recipient)});
     }else if(req.query.cardtype === "leaving"){
-        res.send(`Sorry you're leaving ${req.query.recipient}! `);
+        res.render('leaving-card',{recipient: capitalize(req.query.recipient)});
+        //res.send(`Sorry you're leaving ${req.query.recipient}! `);
     }
 })
 
 app.listen(port, ()=>console.log(`listening on port ${port}`));
+
