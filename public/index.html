@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>E-Greetings Maker</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <div class="container">
+            <h1>Welcome to E-Greetings Maker</h1>
+            <img width="25%" src="cat.webp"/>
+            <form class="flex-col" action="/greetings-card" method="GET">
+                <label class="inline-flex">
+                    <p class="input-title">Recipient:</p>
+                    <input name="recipient" type="text" placeholder="Recipient's name" required/>
+                </label>
+                <div class="flex-col">
+                    <p class="input-title">Card Type:</p>
+                    <label class="inline-flex">
+                        Happy Birthday
+                        <input name="cardtype" type="radio" value="birthday" checked/>
+                    </label>
+                    <label class="inline-flex">
+                        Sorry you're leaving
+                        <input name="cardtype" type="radio" value="leaving"/>
+                    </label>
+                </div>
+
+                <button class="submit-button" type="Submit">Get Card</button>
+            </form>
+        </div>
+    </body>
+</html>
