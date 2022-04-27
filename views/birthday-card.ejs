@@ -4,8 +4,9 @@
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
-        
-        <%- include('sharing-links.ejs') %>
+        <% if(isEdit){ %>
+            <%- include('sharing-links.ejs') %>
+        <% } %> 
 
         <div class="flex-col">
             <h1>Happy Birthday <%= recipient %> !</h1>
@@ -16,6 +17,9 @@
     
         </div>
         <%- include('messages.ejs') %>
-        <%- include('signature-form.ejs') %>
+
+        <% if(isEdit){ %>
+            <%- include('signature-form.ejs') %>
+        <% } %> 
     </body>
 </html>

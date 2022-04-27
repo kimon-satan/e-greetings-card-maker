@@ -42,23 +42,41 @@ app.get('/edit-greetings-card', (req,res)=>{
     assert(req.query.cardid,"no cardid provided");
     const cardDetails = userCards.get(req.query.cardid);
     assert(cardDetails,"cardid not found");
+
+    const params = {
+        recipient: capitalize(cardDetails.recipient), 
+        cardId: req.query.cardid, 
+        url: global.url,
+        messages: cardDetails.messages,
+        isEdit: true
+    };
     
     if(cardDetails.cardType === "birthday"){
-        //res.send(`Happy Birthday ${req.query.recipient}!`);
-        res.render('birthday-card',{
-            recipient: capitalize(cardDetails.recipient), 
-            cardId: req.query.cardid, 
-            url: global.url,
-            messages: cardDetails.messages
-        });
+        res.render('birthday-card', params);
     }else if(cardDetails.cardType === "leaving"){
-        res.render('leaving-card',{
-            recipient: capitalize(cardDetails.recipient), 
-            cardId: req.query.cardid, 
-            url: global.url,
-            messages: cardDetails.messages
-        });
-        //res.send(`Sorry you're leaving ${req.query.recipient}! `);
+        res.render('leaving-card', params);
+    }  
+})
+
+app.get('/view-greetings-card', (req,res)=>{
+
+    assert(req.query.cardid,"no cardid provided");
+    const cardDetails = userCards.get(req.query.cardid);
+    assert(cardDetails,"cardid not found");
+
+
+    const params = {
+        recipient: capitalize(cardDetails.recipient), 
+        cardId: req.query.cardid, 
+        url: global.url,
+        messages: cardDetails.messages,
+        isEdit: false
+    };
+    
+    if(cardDetails.cardType === "birthday"){
+        res.render('birthday-card',params);
+    }else if(cardDetails.cardType === "leaving"){
+        res.render('leaving-card',params);
     }  
 })
 
@@ -83,7 +101,6 @@ app.post('/create-greetings-card', (req,res)=>{
 
 app.post('/add-message', (req,res)=>{
 
-    console.log(req.body);
     assert(req.body.cardid,"no cardid provided");
     const cardDetails = userCards.get(req.body.cardid);
     assert(cardDetails,"cardid not found");

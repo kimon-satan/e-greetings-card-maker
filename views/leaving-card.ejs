@@ -4,12 +4,18 @@
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
-        <%- include('sharing-links.ejs') %>
+        <% if(isEdit){ %>
+            <%- include('sharing-links.ejs') %>
+        <% } %> 
         <div class="flex-col">
             <h1><%= recipient %>, Sorry you're leaving !</h1>
             <img width="33%" src="bye.jpeg"/>
         </div>
+        
         <%- include('messages.ejs') %>
-        <%- include('signature-form.ejs') %>
+
+        <% if(isEdit){ %>
+            <%- include('signature-form.ejs') %>
+        <% } %> 
     </body>
 </html>
