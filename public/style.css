@@ -6,6 +6,11 @@ h1{
     font-family: fantasy;
 }
 
+h2{
+    font-size: 1.2rem;
+    font-weight: 500
+}
+
 .container{
     text-align: center;
     padding-top: 5%;
@@ -27,12 +32,60 @@ h1{
     gap: 0.5rem;
 }
 
+.flex-grow{
+    flex-grow: 2;
+}
+
+.align-start{
+    align-items: start;
+}
+
+.justify-start{
+    justify-content: start;
+}
+
+.absolute{
+    position: absolute;
+}
+
 .input-title{
     font-weight: bold;
 }
+
+.w-10{
+    width: 10rem;
+}
+
+
 
 .submit-button{
     padding: 1rem;
     font-size: 1.5rem;
     margin-top: 1rem;
+}
+
+
+.share-button{
+    padding: 0.5rem;
+    font-size: 0.75rem;
+    color: aliceblue;
+    border-radius: 0.5rem;
+    border-style: none;
+    background-color: cornflowerblue;
+    box-shadow: 0.1rem 0.1rem 0.1rem 0.1rem lightslategray;
+}
+
+.share-button:hover{
+    background-color: darkblue;
+}
+
+.w-full{
+    width: 100%;
+}
+
+#signature{
+    width: 30rem;
+    padding: 0.5rem;
+    background-color: lightgray;
+    border: 1px solid red
 }

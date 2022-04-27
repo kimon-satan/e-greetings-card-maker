@@ -7,12 +7,14 @@ const port = 3000;
 const cardTypes = ["birthday", "leaving"];
 const userCards = new Map();
 
+global.url = `http://localhost:${port}`
+
 ////////////////////////////////////// HELPER FUNCTIONS //////////////////////////////////////
 
 const capitalize = s=>s.charAt(0).toUpperCase() + s.slice(1);
 
 const generateId = (numChars=12)=>{
-    const chars = "./ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789$";
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     let s = "";
     for(let i = 0; i < numChars; i++){
         s += chars[Math.floor(Math.random() * chars.length)];
@@ -34,7 +36,6 @@ app.get('/', (req,res)=>{
     res.sendFile(path.join(__dirname, 'public/index.html'));
 })
 
-//to call use http://localhost:3000/greetings-card?cardtype=birthday&recipient=simon
 
 app.get('/edit-greetings-card', (req,res)=>{
 
@@ -44,13 +45,13 @@ app.get('/edit-greetings-card', (req,res)=>{
     
     if(cardDetails.cardType === "birthday"){
         //res.send(`Happy Birthday ${req.query.recipient}!`);
-        res.render('birthday-card',{recipient: capitalize(cardDetails.recipient), cardId: cardDetails.cardId});
+        res.render('birthday-card',{recipient: capitalize(cardDetails.recipient), cardId: req.query.cardid, url: global.url});
     }else if(cardDetails.cardType === "leaving"){
-        res.render('leaving-card',{recipient: capitalize(cardDetails.recipient), cardId: cardDetails.cardid});
+        res.render('leaving-card',{recipient: capitalize(cardDetails.recipient), cardId: req.query.cardid, url: global.url});
         //res.send(`Sorry you're leaving ${req.query.recipient}! `);
-    }
-    
+    }  
 })
+
 
 app.post('/create-greetings-card', (req,res)=>{
 
@@ -65,6 +66,7 @@ app.post('/create-greetings-card', (req,res)=>{
     res.redirect(`/edit-greetings-card?cardid=${cardId}`);
 
 })
+
 
 app.listen(port, ()=>console.log(`listening on port ${port}`));
 
