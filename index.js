@@ -39,13 +39,13 @@ app.get('/', (req,res)=>{
 
 app.get('/edit-greetings-card', (req,res)=>{
 
-    assert(req.query.cardid,"no cardid provided");
-    const cardDetails = userCards.get(req.query.cardid);
-    assert(cardDetails,"cardid not found");
+    assert(req.query.cardId,"no cardId provided");
+    const cardDetails = userCards.get(req.query.cardId);
+    assert(cardDetails,"cardId not found");
 
     const params = {
         recipient: capitalize(cardDetails.recipient), 
-        cardId: req.query.cardid, 
+        cardId: req.query.cardId, 
         url: global.url,
         messages: cardDetails.messages,
         isEdit: true
@@ -60,14 +60,14 @@ app.get('/edit-greetings-card', (req,res)=>{
 
 app.get('/view-greetings-card', (req,res)=>{
 
-    assert(req.query.cardid,"no cardid provided");
-    const cardDetails = userCards.get(req.query.cardid);
-    assert(cardDetails,"cardid not found");
+    assert(req.query.cardId,"no cardId provided");
+    const cardDetails = userCards.get(req.query.cardId);
+    assert(cardDetails,"cardId not found");
 
 
     const params = {
         recipient: capitalize(cardDetails.recipient), 
-        cardId: req.query.cardid, 
+        cardId: req.query.cardId, 
         url: global.url,
         messages: cardDetails.messages,
         isEdit: false
@@ -95,23 +95,23 @@ app.post('/create-greetings-card', (req,res)=>{
     userCards.set(cardId, cardDetails);
 
     //forward to the edit page
-    res.redirect(`/edit-greetings-card?cardid=${cardId}`);
+    res.redirect(`/edit-greetings-card?cardId=${cardId}`);
 
 })
 
 app.post('/add-message', (req,res)=>{
 
-    assert(req.body.cardid,"no cardid provided");
-    const cardDetails = userCards.get(req.body.cardid);
-    assert(cardDetails,"cardid not found");
+    assert(req.body.cardId,"no cardId provided");
+    const cardDetails = userCards.get(req.body.cardId);
+    assert(cardDetails,"cardId not found");
 
     const t = {...cardDetails};
 
     t.messages.push({message: req.body.message, from: req.body.from});
 
-    userCards.set(req.body.cardid, t);
+    userCards.set(req.body.cardId, t);
 
-    res.redirect(`/edit-greetings-card?cardid=${req.body.cardid}`);
+    res.redirect(`/edit-greetings-card?cardId=${req.body.cardId}`);
 })
 
 

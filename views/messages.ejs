@@ -1,8 +1,8 @@
 <div class="flex-col">
     <% messages.forEach((message)=>{ %>
-        <div class="message">
+        <div class="message flex-col align-start">
             <p><%=message.message %></p>
-            <div class="align-end"><%=message.from %></div>
+            <div><%=message.from %></div>
         </div>
         
     <% }); %>

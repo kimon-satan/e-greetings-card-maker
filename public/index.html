@@ -9,17 +9,17 @@
             <h1>Welcome to E-Greetings Maker</h1>
             <img width="25%" src="cat.webp"/>
             <form class="flex-col" action="/create-greetings-card" method="POST">
-                <label class="inline-flex">
+                <label class="flex-row">
                     <p class="input-title">Recipient:</p>
                     <input name="recipient" type="text" placeholder="Recipient's name" required/>
                 </label>
                 <div class="flex-col">
                     <p class="input-title">Card Type:</p>
-                    <label class="inline-flex">
+                    <label class="flex-row">
                         Happy Birthday
                         <input name="cardtype" type="radio" value="birthday" checked/>
                     </label>
-                    <label class="inline-flex">
+                    <label class="flex-row">
                         Sorry you're leaving
                         <input name="cardtype" type="radio" value="leaving"/>
                     </label>
