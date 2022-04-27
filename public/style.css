@@ -87,5 +87,14 @@ h2{
     width: 30rem;
     padding: 0.5rem;
     background-color: lightgray;
-    border: 1px solid red
+    border: 1px solid red;
+    margin-top: 2rem
+}
+
+.message{
+    width: 10rem;
+    padding: 0.5rem;
+    background-color: lightyellow;
+    box-shadow: 2px 2px 2px 2px lightgray;
+    font-family: cursive;
 }

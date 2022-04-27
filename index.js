@@ -45,9 +45,19 @@ app.get('/edit-greetings-card', (req,res)=>{
     
     if(cardDetails.cardType === "birthday"){
         //res.send(`Happy Birthday ${req.query.recipient}!`);
-        res.render('birthday-card',{recipient: capitalize(cardDetails.recipient), cardId: req.query.cardid, url: global.url});
+        res.render('birthday-card',{
+            recipient: capitalize(cardDetails.recipient), 
+            cardId: req.query.cardid, 
+            url: global.url,
+            messages: cardDetails.messages
+        });
     }else if(cardDetails.cardType === "leaving"){
-        res.render('leaving-card',{recipient: capitalize(cardDetails.recipient), cardId: req.query.cardid, url: global.url});
+        res.render('leaving-card',{
+            recipient: capitalize(cardDetails.recipient), 
+            cardId: req.query.cardid, 
+            url: global.url,
+            messages: cardDetails.messages
+        });
         //res.send(`Sorry you're leaving ${req.query.recipient}! `);
     }  
 })
