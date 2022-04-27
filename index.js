@@ -1,6 +1,9 @@
 const express = require('express');
+const assert = require('assert');
 const app = express();
 const port = 3000;
+
+const cardTypes = ["birthday", "leaving"];
 
 app.use(express.static('/public'));
 
@@ -11,6 +14,9 @@ app.get('/', (req,res)=>{
 //to call use http://localhost:3000/greetings-card?cardtype=birthday&name=simon
 
 app.get('/greetings-card', (req,res)=>{
+
+    assert(cardTypes.includes(req.query.cardtype),"invalid card type");
+    assert(req.query.name,"you need to provide a name");
 
     if(req.query.cardtype === "birthday"){
         res.send(`Happy Birthday ${req.query.name}!`);
