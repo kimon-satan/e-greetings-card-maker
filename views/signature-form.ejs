@@ -1,11 +1,12 @@
 
-<form id="signature" class="flex-col align-start" action="/post-signature" method="POST">
+<form id="signature" class="flex-col align-start" action="/add-message" method="POST">
     <h2>Add your message:</h2>
     <label class="inline-flex w-full justify-start">
-        <div class="input-title w-10">message:</div><textarea rows="5" cols="30"></textarea>
+        <div class="input-title w-10">message:</div><textarea name="message" rows="5" cols="30" required></textarea>
     </label>
     <label class="inline-flex w-full justify-start">
-        <div class="input-title w-10">from:</div><input type="text" />
+        <div class="input-title w-10">from:</div><input type="text" name="from" required/>
     </label>
-    
+    <button class="submit-button">Submit</button>
+    <input type="hidden" id="custId" name="cardid" value="<%=cardId %>">
 </form>

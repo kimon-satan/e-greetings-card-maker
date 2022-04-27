@@ -59,12 +59,32 @@ app.post('/create-greetings-card', (req,res)=>{
     assert(req.body.recipient,"you need to provide a recipient");
 
     const cardId = generateId();
-    const cardDetails = {recipient: req.body.recipient, cardType: req.body.cardtype};
+    const cardDetails = {
+        recipient: req.body.recipient, 
+        cardType: req.body.cardtype,
+        messages: []
+    };
     userCards.set(cardId, cardDetails);
 
     //forward to the edit page
     res.redirect(`/edit-greetings-card?cardid=${cardId}`);
 
+})
+
+app.post('/add-message', (req,res)=>{
+
+    console.log(req.body);
+    assert(req.body.cardid,"no cardid provided");
+    const cardDetails = userCards.get(req.body.cardid);
+    assert(cardDetails,"cardid not found");
+
+    const t = {...cardDetails};
+
+    t.messages.push({message: req.body.message, from: req.body.from});
+
+    userCards.set(req.body.cardid, t);
+
+    res.redirect(`/edit-greetings-card?cardid=${req.body.cardid}`);
 })
 
 
