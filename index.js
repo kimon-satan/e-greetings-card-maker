@@ -2,12 +2,30 @@ const express = require('express');
 const assert = require('assert');
 const path = require('path');
 const app = express();
+
+
 const port = 3000;
 
 const cardTypes = ["birthday", "leaving"];
 const userCards = new Map();
 
-global.url = `http://localhost:${port}`
+global.url = `http://localhost:${port}`;
+
+const mysql = require('mysql');
+const { get } = require('express/lib/request');
+const dbConnection = mysql.createConnection({
+    host: 'localhost',
+    user: 'simon',
+    password: 'test123K!', //this is insecure
+    database: 'EGreetings'
+})
+
+dbConnection.connect((err)=> {
+    if (err) throw err;
+    console.log("Connected!");
+});
+
+
 
 ////////////////////////////////////// HELPER FUNCTIONS //////////////////////////////////////
 
@@ -36,26 +54,71 @@ app.get('/', (req,res)=>{
     res.sendFile(path.join(__dirname, 'public/index.html'));
 })
 
+const getCard = (cardId, errorCb, successCb)=>{
+    
+    const sql = `SELECT * FROM Cards WHERE id=?`;
 
-app.get('/edit-greetings-card', (req,res)=>{
+    dbConnection.query(sql, cardId, (err,result)=>{
+
+        try{
+            assert(!err, err);
+            assert(result.length > 0, "card not found");
+            successCb(result.at(0));
+        }catch(e){
+            errorCb(e);
+        }
+    })
+}
+
+const getMessages = (cardId, errorCb, successCb)=>{
+
+    const sql = `SELECT * FROM messages WHERE cardId=?`;
+
+    dbConnection.query(sql, cardId, (err,result)=>{
+        try{
+            assert(!err, err);
+            successCb(result);
+        }catch(e){
+            errorCb(e);
+        }
+    })
+}
+
+
+app.get('/edit-greetings-card', (req,res,next)=>{
 
     assert(req.query.cardId,"no cardId provided");
-    const cardDetails = userCards.get(req.query.cardId);
-    assert(cardDetails,"cardId not found");
+    //const cardDetails = userCards.get(req.query.cardId);
+    //assert(cardDetails,"cardId not found");
 
-    const params = {
-        recipient: capitalize(cardDetails.recipient), 
-        cardId: req.query.cardId, 
-        url: global.url,
-        messages: cardDetails.messages,
-        isEdit: true
-    };
-    
-    if(cardDetails.cardType === "birthday"){
-        res.render('birthday-card', params);
-    }else if(cardDetails.cardType === "leaving"){
-        res.render('leaving-card', params);
-    }  
+    const sql = `SELECT * FROM Cards LEFT JOIN messages ON Cards.id=messages.cardId WHERE id=?`;
+
+    dbConnection.query(sql, req.query.cardId, (err,result)=>{
+        try{
+            assert(!err, err);
+            assert(result.length > 0, "card not found");
+            const messages = result.filter(r=>r.messageId !== null);
+
+            const cardType = result[0].cardType;
+
+            const params = {
+                recipient: capitalize(result[0].recipient), 
+                cardId: req.query.cardId, 
+                url: global.url,
+                messages: messages,
+                isEdit: true
+            };
+
+            if(cardType === "birthday"){
+                res.render('birthday-card', params);
+            }else if(cardType === "leaving"){
+                res.render('leaving-card', params);
+            } 
+            next();
+        }catch(e){
+            next(e);
+        }
+    })
 })
 
 app.get('/view-greetings-card', (req,res)=>{
@@ -93,6 +156,16 @@ app.post('/create-greetings-card', (req,res)=>{
         messages: []
     };
     userCards.set(cardId, cardDetails);
+
+    //Insert the card into the database
+    const sql = `INSERT INTO Cards (id,recipient,cardType,created) VALUES ('${cardId}','${req.body.recipient}','${req.body.cardtype}',CURRENT_TIMESTAMP())`;
+    dbConnection.query(sql, (err,result)=>{
+        if(err){
+            console.error(err);
+        }else{
+            console.log(result);
+        }
+    })
 
     //forward to the edit page
     res.redirect(`/edit-greetings-card?cardId=${cardId}`);
