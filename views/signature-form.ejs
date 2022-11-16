@@ -1,5 +1,5 @@
 
-<form id="signature" class="flex-col align-start" action="/add-message" method="POST">
+<form id="signature" class="flex-col align-start">
     <h2>Add your message:</h2>
     <label class="flex-row w-full justify-start">
         <div class="input-title w-10">message:</div><textarea name="message" rows="5" cols="30" required></textarea>
@@ -8,5 +8,4 @@
         <div class="input-title w-10">from:</div><input type="text" name="from" required/>
     </label>
     <button class="submit-button">Submit</button>
-    <input type="hidden" id="custId" name="cardId" value="<%=cardId %>">
 </form>
