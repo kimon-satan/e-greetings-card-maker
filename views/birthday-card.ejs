@@ -5,22 +5,15 @@
         <title>E-Greetings Maker</title>
     </head>
     <body>
-        <% if(isEdit){ %>
-            <%- include('sharing-links.ejs') %>
-        <% } %> 
 
         <div class="flex-col">
-            <h1>Happy Birthday <%= recipient %> !</h1>
+            <h1>Happy Birthday Simon!</h1>
             <img width="33%" src="birthday.jpeg"/>
 
             <div class="messages flex-col">
             </div>
     
         </div>
-        <%- include('messages.ejs') %>
 
-        <% if(isEdit){ %>
-            <%- include('signature-form.ejs') %>
-        <% } %> 
     </body>
 </html>

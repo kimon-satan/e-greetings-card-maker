@@ -5,18 +5,11 @@
         <title>E-Greetings Maker</title>
     </head>
     <body>
-        <% if(isEdit){ %>
-            <%- include('sharing-links.ejs') %>
-        <% } %> 
+
         <div class="flex-col">
-            <h1><%= recipient %>, Sorry you're leaving !</h1>
+            <h1>Simon, Sorry you're leaving !</h1>
             <img width="33%" src="bye.jpeg"/>
         </div>
         
-        <%- include('messages.ejs') %>
-
-        <% if(isEdit){ %>
-            <%- include('signature-form.ejs') %>
-        <% } %> 
     </body>
 </html>
