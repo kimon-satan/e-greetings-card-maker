@@ -106,7 +106,8 @@ app.get('/edit-greetings-card', (req,res,next)=>{
                 cardId: req.query.cardId, 
                 url: global.url,
                 messages: messages,
-                isEdit: true
+                isEdit: true,
+                imagePath: "/bye.jpeg"
             };
 
             if(cardType === "birthday"){
