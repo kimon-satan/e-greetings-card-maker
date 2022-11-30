@@ -64,7 +64,7 @@ app.get('/view-greetings-card', (req,res)=>{
     const cardDetails = userCards.get(req.query.cardId);
     assert(cardDetails,"cardId not found");
 
-
+    
     const params = {
         recipient: capitalize(cardDetails.recipient), 
         cardId: req.query.cardId, 
