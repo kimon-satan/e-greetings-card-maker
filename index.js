@@ -50,81 +50,119 @@ app.get('/', (req,res)=>{
 })
 
 
-app.get('/edit-greetings-card', (req,res)=>{
+app.get('/edit-greetings-card', (req,res, next)=>{
 
-    assert(req.query.cardId,"no cardId provided");
-    const cardDetails = userCards.get(req.query.cardId);
-    assert(cardDetails,"cardId not found");
-
-    const params = {
-        recipient: capitalize(cardDetails.recipient), 
-        cardId: req.query.cardId, 
-        url: global.url,
-        messages: cardDetails.messages,
-        isEdit: true
-    };
+    const sql = `SELECT * FROM Cards LEFT JOIN Messages ON Cards.CardId = Messages.CardId WHERE Cards.CardId = ?`;
     
-    if(cardDetails.cardType === "birthday"){
-        res.render('birthday-card', params);
-    }else if(cardDetails.cardType === "leaving"){
-        res.render('leaving-card', params);
-    }  
+    global.db.all(sql,[req.query.cardId], function(err,rows){
+        if(err){
+            next(err);
+        }else{
+
+            if(rows.length < 1){
+                next(new Error("card not found"));
+                return;
+            }
+
+            const cardDetails = rows[0];
+
+            const params = {
+                recipient: capitalize(cardDetails.Recipient), 
+                cardId: req.query.cardId, 
+                url: global.url,
+                messages: rows,
+                isEdit: true
+            };
+            
+            if(cardDetails.CardType === "birthday"){
+                res.render('birthday-card',params);
+            }else if(cardDetails.CardType === "leaving"){
+                res.render('leaving-card',params);
+            }  
+            next();
+        }
+    })
+    
 })
 
-app.get('/view-greetings-card', (req,res)=>{
+app.get('/view-greetings-card', (req,res, next)=>{
 
     assert(req.query.cardId,"no cardId provided");
-    const cardDetails = userCards.get(req.query.cardId);
-    assert(cardDetails,"cardId not found");
 
+    const sql = `SELECT * FROM Cards LEFT JOIN Messages ON Cards.CardId = Messages.CardId WHERE Cards.CardId = ?`;
     
-    const params = {
-        recipient: capitalize(cardDetails.recipient), 
-        cardId: req.query.cardId, 
-        url: global.url,
-        messages: cardDetails.messages,
-        isEdit: false
-    };
-    
-    if(cardDetails.cardType === "birthday"){
-        res.render('birthday-card',params);
-    }else if(cardDetails.cardType === "leaving"){
-        res.render('leaving-card',params);
-    }  
+    global.db.all(sql,[req.query.cardId], function(err,rows){
+        if(err){
+            next(err);
+        }else{
+
+            if(rows.length < 1){
+                next(new Error("card not found"));
+                return;
+            }
+
+            const cardDetails = rows[0];
+
+            const params = {
+                recipient: capitalize(cardDetails.Recipient), 
+                cardId: req.query.cardId, 
+                url: global.url,
+                messages: rows,
+                isEdit: false
+            };
+            
+            if(cardDetails.CardType === "birthday"){
+                res.render('birthday-card',params);
+            }else if(cardDetails.CardType === "leaving"){
+                res.render('leaving-card',params);
+            }  
+            next();
+        }
+    })
+   
 })
 
 
-app.post('/create-greetings-card', (req,res)=>{
+app.post('/create-greetings-card', (req,res,next)=>{
 
     assert(cardTypes.includes(req.body.cardtype),"invalid card type");
     assert(req.body.recipient,"you need to provide a recipient");
 
     const cardId = generateId();
-    const cardDetails = {
-        recipient: req.body.recipient, 
-        cardType: req.body.cardtype,
-        messages: []
-    };
-    userCards.set(cardId, cardDetails);
 
-    //forward to the edit page
-    res.redirect(`/edit-greetings-card?cardId=${cardId}`);
+    const sql = `INSERT INTO Cards VALUES (?,?,?)`;
+
+    global.db.run(sql,[cardId, req.body.recipient, req.body.cardtype],function(err){
+
+        if(err){
+            next(err);
+        }else{
+            const {lastID, changes} = this;
+            console.log({lastID, changes});
+            //forward to the edit page
+            res.redirect(`/edit-greetings-card?cardId=${cardId}`);
+            next();
+        }
+
+    });
 
 })
 
-app.post('/add-message', (req,res)=>{
+app.post('/add-message', (req,res,next)=>{
 
     assert(req.body.cardId,"no cardId provided");
-    const cardDetails = userCards.get(req.body.cardId);
-    assert(cardDetails,"cardId not found");
 
-    const t = {...cardDetails};
+    const sql = `INSERT INTO Messages ("_Message","_From","CardId") VALUES (?,?,?)`;
 
-    t.messages.push({message: req.body.message, from: req.body.from});
-
-    userCards.set(req.body.cardId, t);
-
-    res.redirect(`/edit-greetings-card?cardId=${req.body.cardId}`);
+    global.db.run(sql, [req.body.message,req.body.from,req.body.cardId],function(err){
+        if(err){
+            next(err);
+        }else{
+            res.redirect(`/edit-greetings-card?cardId=${req.body.cardId}`);
+            next();
+        }
+    })
+    
 })
 
 
